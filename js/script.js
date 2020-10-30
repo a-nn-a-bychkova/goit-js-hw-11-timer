@@ -37,40 +37,39 @@ const refs = {
   fieldSeconds: document.querySelector('.field>span[data-value="secs"]'),
 }
 
-
-
-
-const timer = {
-  start() { 
-  
-    const targetDate = new Date('Oct 31, 2021');
-   
+class CountdownTimer{ 
+  constructor({selector,targetDate}) {
+    this.selector = selector;
+    this.targetDate = targetDate;
+}
+start(){    
     setInterval(() => {
       const currentTime = Date.now();
-      const deltaTime = (currentTime - targetDate)*-1;
-      const {days,hours,mins,secs} = getTimeComponents(deltaTime);
+      const deltaTime = (currentTime - this.targetDate)*-1;
+      const {days,hours,mins,secs} = this.getTimeComponents(deltaTime);
       console.log(`${days}:${hours}:${mins}:${secs}`)
-      updateClockFace({days,hours,mins,secs});
+      this.updateClockFace({days,hours,mins,secs});
     }, 1000)
-  },
-}
-
-function getTimeComponents(time) {
- const days = pad(Math.floor(time / (1000 * 60 * 60 * 24)));
-  const hours = pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)))
-  const mins = pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
-  const secs = pad(Math.floor((time % (1000 * 60)) / 1000));
-return {days,hours,mins,secs}
-}
-
-function pad(value) {
-  return String(value).padStart(2,'0')
-}
-
-timer.start();
-function updateClockFace({ days, hours, mins, secs }) {
+  };
+getTimeComponents(time) {
+ const days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
+  const hours = this.pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)))
+  const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+  const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
+  return {days,hours,mins,secs}};
+pad(value) {
+  return String(value).padStart(2,'0')};
+updateClockFace({ days, hours, mins, secs }) {
   refs.fieldDays.textContent = `${days}`;
   refs.fieldHours.textContent = `${hours}`;
   refs.fieldMinutes.textContent = `${mins}`;
   refs.fieldSeconds.textContent = `${secs}`;
 }
+};
+
+const timer = new CountdownTimer({
+  selector: '#timer-1',
+  targetDate: new Date('Oct 31, 2020'),
+});
+
+timer.start();
